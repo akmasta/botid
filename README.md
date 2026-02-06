@@ -25,17 +25,17 @@ BotID fixes this. It's an identity layer for the agentic web.
 ```
 ┌────────────┐    X-BotID headers    ┌────────────┐
 │  AI Agent  │ ────────────────────► │  API / Web │
-│  (signed)  │                       │  (verified) │
-└─────┬──────┘                       └──────┬──────┘
+│  (signed)  │                       │ (verified) │
+└─────┬──────┘                       └──────┬─────┘
       │ signs with Ed25519                  │ looks up public key
       │ private key                         │ from BotID registry
       ▼                                     ▼
 ┌─────────────────────────────────────────────────┐
-│              BotID Registry (botid.net)          │
+│              BotID Registry (botid.net)         │
 │  • Stores public keys                           │
 │  • Verifies signatures                          │
 │  • Issues bot identifiers                       │
-│  • GitHub-verified deployer identity             │
+│  • GitHub-verified deployer identity            │
 └─────────────────────────────────────────────────┘
 ```
 
