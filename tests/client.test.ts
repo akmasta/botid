@@ -70,7 +70,7 @@ describe("client.fetch", () => {
     const headers = fetchMock.mock.calls[0][1].headers as Headers;
     const signature = headers.get(HEADER_SIGNATURE)!;
     const timestamp = headers.get(HEADER_TIMESTAMP)!;
-    const message = `${timestamp}.${TEST_BOT_ID}`;
+    const message = `${timestamp}.${TEST_BOT_ID}.GET./api`;
 
     expect(verifySignature(message, signature, keys.publicKey)).toBe(true);
   });
@@ -114,6 +114,8 @@ describe("client.verify", () => {
     expect(body.botId).toBe(TEST_BOT_ID);
     expect(body.signature).toMatch(/^[0-9a-f]{128}$/);
     expect(typeof body.timestamp).toBe("number");
+    expect(body.method).toBe("POST");
+    expect(body.path).toBe("/api/verify");
 
     expect(result).toEqual(verifyResult);
   });

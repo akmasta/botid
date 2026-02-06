@@ -37,7 +37,7 @@ describe("generateKeypair", () => {
 describe("signMessage / verifySignature", () => {
   it("round-trips: sign then verify", () => {
     const { publicKey, privateKey } = generateKeypair();
-    const message = "1700000000.bot_test123";
+    const message = "1700000000.bot_test123.GET./test";
     const signature = signMessage(message, privateKey);
 
     expect(verifySignature(message, signature, publicKey)).toBe(true);

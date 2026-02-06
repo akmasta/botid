@@ -40,7 +40,9 @@ export class BotIDClient {
   /** Drop-in `fetch` replacement that signs every request with BotID headers. */
   async fetch(url: string, init?: RequestInit): Promise<Response> {
     const timestamp = Math.floor(Date.now() / 1000);
-    const message = `${timestamp}.${this.botId}`;
+    const method = (init?.method ?? "GET").toUpperCase();
+    const pathname = new URL(url).pathname;
+    const message = `${timestamp}.${this.botId}.${method}.${pathname}`;
     const signature = signMessage(message, this.privateKey);
 
     const headers = new Headers(init?.headers);
@@ -54,7 +56,7 @@ export class BotIDClient {
   /** Verify this bot's identity against the BotID API (health check). */
   async verify(): Promise<VerificationResult> {
     const timestamp = Math.floor(Date.now() / 1000);
-    const message = `${timestamp}.${this.botId}`;
+    const message = `${timestamp}.${this.botId}.POST./api/verify`;
     const signature = signMessage(message, this.privateKey);
 
     const res = await fetch(`${this.apiUrl}/api/verify`, {
@@ -64,6 +66,8 @@ export class BotIDClient {
         botId: this.botId,
         signature,
         timestamp,
+        method: "POST",
+        path: "/api/verify",
       }),
     });
 

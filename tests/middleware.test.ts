@@ -7,12 +7,12 @@ const TEST_BOT_ID = "bot_mw_test";
 
 let fetchMock: ReturnType<typeof vi.fn>;
 
-function mockReq(headers: Record<string, string> = {}) {
+function mockReq(headers: Record<string, string> = {}, method = "GET", url = "/test") {
   const lowered: Record<string, string> = {};
   for (const [k, v] of Object.entries(headers)) {
     lowered[k.toLowerCase()] = v;
   }
-  return { headers: lowered } as any;
+  return { headers: lowered, method, url } as any;
 }
 
 function mockRes() {
@@ -22,9 +22,9 @@ function mockRes() {
   return res;
 }
 
-function validHeaders(timestamp?: number) {
+function validHeaders(timestamp?: number, method = "GET", path = "/test") {
   const ts = timestamp ?? Math.floor(Date.now() / 1000);
-  const message = `${ts}.${TEST_BOT_ID}`;
+  const message = `${ts}.${TEST_BOT_ID}.${method}.${path}`;
   const signature = signMessage(message, keys.privateKey);
   return {
     "x-botid": TEST_BOT_ID,

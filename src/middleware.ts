@@ -19,6 +19,9 @@ export interface VerifyBotIDOptions {
 
 interface ExpressRequest {
   headers: Record<string, string | string[] | undefined>;
+  method?: string;
+  url?: string;
+  originalUrl?: string;
   BotID?: VerificationResult;
   [key: string]: unknown;
 }
@@ -106,7 +109,9 @@ export function verifyBotID(options: VerifyBotIDOptions = {}) {
       }
       const { publicKey } = (await keysRes.json()) as { publicKey: string };
 
-      const message = `${timestamp}.${botId}`;
+      const reqPath = (req.originalUrl ?? req.url ?? "/").split("?")[0];
+      const reqMethod = (req.method ?? "GET").toUpperCase();
+      const message = `${timestamp}.${botId}.${reqMethod}.${reqPath}`;
       const verified = verifySignature(message, signature, publicKey);
 
       const result: VerificationResult = verified

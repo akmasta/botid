@@ -172,10 +172,11 @@ Every signed request includes three headers:
 | Header | Value |
 |--------|-------|
 | `X-BotID` | The bot's public identifier (e.g. `bot_abc123xyz789`) |
-| `X-BotID-Signature` | Ed25519 signature (hex) of `{timestamp}.{botId}` |
+| `X-BotID-Signature` | Ed25519 signature (hex) of `{timestamp}.{botId}.{METHOD}.{pathname}` |
 | `X-BotID-Timestamp` | Unix timestamp in seconds |
 
 **Crypto:** Ed25519 with PKCS8 DER (private) and SPKI DER (public) key encoding.
+**Request binding:** Signatures include the HTTP method and pathname. A signature for `GET /search` cannot be replayed against `POST /admin`.
 **Replay protection:** Signatures older than 5 minutes are rejected.
 **Key storage:** Private keys never leave the deployer's machine. The registry only stores public keys.
 **Identity:** Every bot is linked to a verified GitHub account. No anonymous registrations.
